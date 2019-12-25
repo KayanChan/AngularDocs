@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-$filter</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <!-- 1.绑定符号 {{ }} 内通过 | 符号来调用过滤器 -->
+        <div>{{name | uppercase}}</div>
+        <!-- 2.在JavaScript代码中可以通过 $filter 来调用过滤器-->
+        <div ng-bind="rename"></div>
+        <script>
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', '$filter', function($scope, $filter){
+                $scope.name = 'abc';
+                $scope.rename = $filter('uppercase')('efg');
+            }]);
+        </script>
+    </body>
+</html>

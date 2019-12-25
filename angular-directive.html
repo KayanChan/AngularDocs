@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <!-- E:element -->
+        <bai-du my-url="http://www.baidu.com" link-text="Click me to go to Baidu"></bai-du>
+        <!-- A:attribute -->
+        <div bai-du  my-url="http://www.baidu.com" link-text="Click me to go to Baidu"></div>
+        <!-- C:class -->
+        <div class="bai-du" my-url="http://www.baidu.com" link-text="Click me to go to Baidu"></div>
+        <!-- M:注释,反模式 -->
+        <!-- directive:bai-du -->
+        <hr>
+        <div wei-xin wx-url="wechatUrl" wx-text="wechat"></div>
+        <input type="text" name="" value="" ng-model="wechatUrl">
+        {{wxText}}
+        <hr>
+        <div ng-controller="MyController">
+                outside directive: {{myData}}
+            <div my-directive>
+                <div>
+                    inside directive: {{myData}}
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.directive('baiDu', function(){
+                return {
+                    restrict: 'EACM',
+                    replace: true,
+                    scope: {
+                        myUrl: '@',
+                        linkText: '@'
+                    },
+                    template: '<a href="{{myUrl}}">{{linkText}}</a>'
+                }
+            });
+            app.directive('weiXin', function(){
+                return {
+                    restrict: 'A',
+                    replace: true,
+                    scope: {
+                        wxUrl: '=wxUrl',
+                        wxText: '@'
+                    },
+                    template: '<div><input type="text" ng-model="wxUrl"/><input type="text" ng-model="wxText"/><a href="{{wxUrl}}">{{wxText}}</a></div>'
+                }
+            });
+            app.controller('MyController', ['$scope', function($scope){
+                $scope.myData = 'Hey';
+            }]);
+
+            // https://segmentfault.com/a/1190000002773689
+        </script>
+    </body>
+</html>

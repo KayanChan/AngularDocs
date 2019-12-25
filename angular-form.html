@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-form(未完)</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.2.5/angular.min.js"></script>
+        <style>
+        input.ng-pristine {
+            border: 1px solid yellow;
+        }
+        input.ng-dirty {
+            border: 1px solid yellow;
+        }
+        input.ng-invalid {
+            border: 1px solid red;
+        }
+        input.ng-valid {
+            border: 1px solid green;
+        }
+        </style>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <form name="myForm" novalidate>
+            <!-- 想要屏蔽浏览器对表单的默认验证行为，可以在表单元素上添加 novalidate 标记。 -->
+            <!-- 要使用表单验证，首先要确保表单有一个 name 属性 -->
+            <div>
+                <input type="text" ng-model="requiredText" placeholder="必填" name="requiredText" required />
+                <div>未修改:{{myForm.requiredText.$pristine}}</div>
+            </div>
+
+            <div>
+                <input type="text" ng-model="minText" placeholder="最少5个" name="minText" ng-minlength="5">
+                <div>是否修改:{{myForm.minText.$dirty}}</div>
+            </div>
+
+            <div>
+                <input type="text" ng-model="maxText" placeholder="最多10个" name="maxText" ng-maxlength="10">
+                <div>是否合法:{{myForm.maxText.$valid}}</div>
+            </div>
+
+            <div>
+                <input type="text" ng-model="enText" placeholder="英文字母" name="enText" ng-pattern="/[a-zA-Z]/">
+                <div>是否不合法:{{myForm.enText.$invalid}}</div>
+            </div>
+
+            <div>
+                <input type="email" ng-model="email" placeholder="电子邮件" name="email">
+                <div>各种验证不通过:{{myForm.email.$error}}</div>
+            </div>
+
+            <div><input type="number" placeholder="数字" name="number"></div>
+
+            <div><input type="url" placeholder="url" name="url"></div>
+        </form>
+        <script>
+            angular.module('app', [])
+                .controller('MyController',  ['$scope', function($scope) {
+                    $scope.requiredText = '这是必填项';
+                    $scope.minText = 'abc';
+                }]);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-service(未完P138)</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <div ng-controller="RequestCtroller">
+            <button type="button" name="button">请求用户名</button>
+        </div>
+        <div ng-controller="GetController">
+            <button type="button" name="button">获取用户名</button>
+            <div>{{username}}</div>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app
+                .factory('RequestServer', ['$q', '$http', function($q, $http){
+
+                    return {
+                        getUserName: function(){
+                            return
+                        }
+                    }
+                }])
+                .controller('RequestCtroller', ['$scope', function($scope){
+                    $scope.name = 'Hello World';
+                }])
+                .controller('RequestCtroller', ['$scope', function($scope){
+                    $scope.name = 'Hello World';
+                }]);
+        </script>
+    </body>
+</html>

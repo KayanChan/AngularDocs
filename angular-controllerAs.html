@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController as ctrl">
+        <div>
+            <input type="text" name="" value="" ng-model="ctrl.name">
+            <span>{{ctrl.name}}</span>
+        </div>
+        <div>
+            <div bai-du></div>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', function(){
+
+            });
+            app.directive('baiDu', function(){
+                return {
+                    restrict: 'A',
+                    template: '<div>{{MyController.msg}}</div>',
+                    controllerAs: 'MyController',
+                    controller: function(){
+                        this.msg = 'Hey!'
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

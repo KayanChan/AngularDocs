@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-factory-Interceptors(未完)</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.factory('HttpInterceptor', ['$q', '$rootScope', HttpInterceptor]);
+            function HttpInterceptor($q, $rootScope){
+                  return {
+                    request: function(config){
+                        console.log('request:');
+                        console.log(config);
+                      return config || $q.when(config);
+                    },
+                    requestError: function(err){
+                        console.log('requestError:');
+                        console.log(err);
+                      return err || $q.reject(err);
+                    },
+                    response: function(res){
+                        console.log('response:');
+                        console.log(res);
+                        /*
+                        if (res.config.url == '/api/login') {
+                        // 假设API服务器返回的数据格式如下:
+                        // { token: "AUTH_TOKEN" }
+                            Auth.setToken(res.data.token);
+                        }
+                        */
+                        return res || $q.when(res);
+                    },
+                    responseError: function(err){
+                        console.log('responseError:');
+                        console.log(err);
+                        switch(rejection.status) {
+                            case 401:
+                                if (rejection.config.url!=='api/login')
+                                // 如果当前不是在登录页面
+                                $rootScope.$broadcast('auth:loginRequired');
+                                break;
+                            case 403:
+                                $rootScope.$broadcast('auth:forbidden');
+                                break;
+                            case 404:
+                                $rootScope.$broadcast('page:notFound');
+                                break;
+                            case 500:
+                                $rootScope.$broadcast('server:error');
+                                break;
+                        }
+                        return $q.reject(err);
+                    }
+                  };
+            };
+            app.config(['$httpProvider', function($httpProvider){
+                console.log($httpProvider);
+                $httpProvider.interceptors.push(HttpInterceptor);
+            }]);
+            app.controller('MyController', ['$scope', '$http', function($scope, $http){
+                $http.get('https://hq.tigerbrokers.com/fundamental/finance_calendar/getType/2017-02-26/2017-06-10').then(function(data){
+                    console.log(data);
+                });
+            }]);
+        </script>
+    </body>
+</html>

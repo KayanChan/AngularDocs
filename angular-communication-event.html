@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-communication-event</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <h2>向上传播事件</h2>
+        <div ng-controller="ParentController">
+            <p>Parent Location: {{location}}</p>
+            <div ng-controller="ChildController">
+                <p>Child Location: {{location}}</p>
+                <button ng-click="emit()">emit</button>
+            </div>
+        </div>
+        <h2>向下广播事件</h2>
+        <div ng-controller="PController">
+            <p>Parent Location: {{location}}</p>
+            <button ng-click="broadcast()">broadcast</button>
+            <div ng-controller="CController">
+                <p>Child Location: {{location}}</p>
+            </div>
+        </div>
+        <h2>兄弟作用域之间传播</h2>
+        <div ng-controller="PaController">
+            Parent Location: {{location}}
+            <button ng-click="broadcast()">broadcast</button>
+            <div ng-controller="BroAController">
+                <h4>Bro-A</h4>
+                <p>Bro-A Location: {{location}} <button ng-click="recallBro()">recallBro</button></p>
+            </div>
+            <div ng-controller="BroBController">
+                <h4>Bro-B</h4>
+                <p>Bro-B Location: {{location}} <button ng-click="recallBro()">recallBro</button></p>
+            </div>
+        </div>
+        <script>
+            var app = angular.module('app', []);
+            app.controller('ParentController', ['$scope', function($scope){
+                $scope.location = "Beijing";
+                $scope.$on('summon', function(e, newLocation) {
+                    $scope.location = newLocation;
+                });
+            }]);
+            app.controller('ChildController', ['$scope', function($scope){
+                $scope.location = "Shanghai";
+                $scope.emit = function() {
+                    $scope.$emit('summon', $scope.location);
+                }
+            }]);
+
+            app.controller('PController', ['$scope', function($scope){
+                $scope.location = 'Beijing';
+                $scope.broadcast = function() {
+                    $scope.$broadcast('recall', $scope.location);
+                }
+            }]);
+            app.controller('CController', ['$scope', function($scope){
+                $scope.location = "Shanghai";
+                $scope.$on('recall', function(e, newLocation) {
+                    $scope.location = newLocation;
+                });
+            }]);
+
+            app.controller('PaController', ['$scope', function($scope){
+                $scope.location = 'Beijing';
+                $scope.broadcast = function(){
+                    $scope.location = 'Los Angeles';
+                    $scope.$broadcast('down', $scope.location);
+                };
+                $scope.$on('up', function(e, newLocation) {
+                    $scope.location = newLocation;
+                    $scope.$broadcast('down', $scope.location);
+                });
+            }]);
+            app.controller('BroAController', ['$scope', function($scope){
+                $scope.location = 'Shanghai';
+                $scope.recallBro = function(){
+                    $scope.location = 'Liverpool';
+                    $scope.$emit('up', $scope.location);
+                };
+                $scope.$on('down', function(e, newLocation){
+                    $scope.location = newLocation;
+                });
+            }]);
+            app.controller('BroBController', ['$scope', function($scope){
+                $scope.location = 'Shamen';
+                $scope.recallBro = function(){
+                    $scope.location = 'Sydney';
+                    $scope.$emit('up', $scope.location);
+                };
+                $scope.$on('down', function(e, newLocation){
+                    $scope.location = newLocation;
+                });
+            }]);
+        </script>
+    </body>
+</html>

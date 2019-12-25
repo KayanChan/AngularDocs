@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-require</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <div teacher>
+            {{name}}
+            <student-a></student-a>
+            <student-b></student-b>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+
+            app.directive('studentA', function(){
+                return {
+                    // ? 寻找某个/些指令，找不到时,link函数的ctrl参数返回null;否则不使用?报错
+                    // ^ 寻找某个指令，找不到时,向上父元素找;否则不使用^不向父层找
+                    restrict: 'E',
+                    require: '?^teacher',
+                    scope: {},
+                    template: "<div>A's teacher name: <span>{{teacherName}}</span></div>",
+                    link: function($scope, $element, $attrs, ctrl){
+                        //获取teacher指令控制器，并调用其方法sayName()
+                        console.log(ctrl);
+                        $scope.teacherName = ctrl.sayName();
+                    }
+                }
+            });
+
+            app.directive('studentB', function(){
+                return {
+                    restrict: 'E',
+                    require: ['?^teacher', 'studentA'],
+                    scope: {},
+                    template: "<div>A's teacher name: <span>{{teacherName}}</span></div>",
+                    link: function($scope, $element, $attrs, ctrl){
+                        //获取teacher指令控制器，并调用其方法sayName()
+                        console.log(ctrl);
+                        // 此处报错：指令studentA向上可以找到指令teacher及自身，但是不能找到相邻兄弟的student-b
+                        $scope.teacherName = ctrl.sayName();
+                    }
+                }
+            });
+
+            app.directive('teacher', function(){
+                return {
+                    restrict: 'A',
+                    controller: function($scope){
+                        $scope.name = 'Miss Wong';
+                        // 扩展控制器的方法sayName，目的是让外部内获取控制器内部数据
+                        this.sayName = function(){
+                            return $scope.name;
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

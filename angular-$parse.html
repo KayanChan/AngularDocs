@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-$parse</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <input type="text" ng-model="expression" placeholder="enter a expression">
+        <div>The result is {{result}}</div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', '$parse', '$timeout', function($scope, $parse, $timeout){
+                $timeout(function(){
+                    $scope.expression = '1+1';
+                }, 1000);
+                $scope.$watch('expression', function(newValue, oldValue, scope){
+                    if(newValue != oldValue){
+                        // 手动解析表达式
+                        // var 解析后的函数 = $parse(表达式)
+                        var parseFn = $parse(newValue);
+                        // 执行解析后的函数
+                        $scope.result = parseFn(scope, null);
+                    }
+                });
+            }]);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-controller</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <h2>{{name}}</h2>
+        <directive-a></directive-a>
+        <directive-b></directive-b>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', function($scope){
+                $scope.name = 'Lucas';
+                console.log('MyController:' + $scope.name);
+            }]);
+            app.directive('directiveA', function(){
+                return {
+                    restrict: 'E',
+                    template: '<h4>匿名函数：{{name}}</h4>',
+                    controller: function($scope){
+                        console.log('匿名函数：' + $scope.name);
+                    }
+                }
+            });
+            app.directive('directiveB', function(){
+                return {
+                    restrict: 'E',
+                    template: '<h4>MyController:{{name}}</h4>',
+                    controller: 'MyController'
+                };
+            });
+        </script>
+    </body>
+</html>

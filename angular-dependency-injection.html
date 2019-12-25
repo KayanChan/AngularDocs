@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-dependency-injection</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body>
+        <div ng-app="oneApp" ng-controller="OneController">
+            <h2>oneApp:在内部创建依赖</h2>
+            <input type="text" ng-model="one">
+            <div>{{one}}</div>
+        </div>
+
+        <div id="two" ng-controller="TwoController">
+            <h2>twoApp:通过$inject显式注入声明</h2>
+            <input type="text" ng-model="two">
+            <div>{{two}}</div>
+        </div>
+
+        <div id="three" ng-controller="ThreeController">
+            <h2>threeApp:</h2>
+            <input type="text" ng-model="three">
+            <div>{{three}}</div>
+            行内注入声明:在需要的地方通过参数进行传递(最优)
+            <pre></pre>
+        </div>
+        <script>
+            // 一般angular单个页面只能加载一个ng-app，一个页面会自动加载第一个ng-app，其它ng-app不会被加载
+            // 问题：当项目发布到正式环境时都会压缩代码，这时function的参数可能会变成a,b，这就会导致代码出现问题
+            var oneApp = angular.module('oneApp', []);
+            oneApp.controller('OneController', function($scope){
+                $scope.one = 'one';
+            });
+
+            // $inject 数组元素的顺序必须和注入,参数的顺序一一对应。这种声明方式可以在压缩后的代码中运行
+            angular
+                .module('twoApp', [])
+                .controller('TwoController', twoController);
+            twoController.$inject = ['$scope'];
+            function twoController($scope){
+                $scope.two = 'two';
+            }
+
+            // 加载多个ng-app就需要使用angular.bootstrap去加载后面的ng-app
+            // 显示注入的语法糖，跟通过 $inject 属性进行注入声明的原理是完全一样的，但允许我们在函数定义时从行内将参数传入，可以避免在定义过程中使用临时变量
+            angular.bootstrap(document.getElementById('two'), ['twoApp']);
+
+            angular
+                .module('threeApp', [])
+                .controller('ThreeController', ['$scope', function($scope){
+                    $scope.three = 'three';
+                }]);
+            angular.bootstrap(document.getElementById('three'), ['threeApp']);
+        </script>
+    </body>
+</html>

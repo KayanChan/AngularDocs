@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app="App">
+    <head>
+        <meta charset="utf-8">
+        <title>angular-HelloWorld</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-controller="testCtrl">
+        <input type="text" ng-model="name">
+        <div ng-bind="name"></div>
+
+
+        <textarea cols="50" rows="10" maxlength="100" title="只能输入100个字" ng-model="text" ng-change="tolCount()"></textarea>
+        <p>还可输入{{count}}个字</p>
+
+        <script>
+        var app = angular.module('App', []);
+
+    　　app.controller('testCtrl', function($scope) {
+    　　　　$scope.count = 100;
+
+    　　　　$scope.tolCount = function () {
+    　　　　　　console.log($scope.text.length);
+    　　　　　　$scope.count = 100 - $scope.text.length;
+    　　　　};
+    　　});
+        </script>
+    </body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-选项卡</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .inline-block, .ib {
+                display: inline-block;
+            }
+            .pub-tabs-wrap {
+                position: relative;
+            }
+            .pub-tabs {
+                margin: 0;
+                padding: 45px 0px 27px 40px;
+                list-style: none;
+                background-color: #e6eaf5;
+            }
+            .pub-tabs li {
+                height: 18px;
+                margin-right: 60px;
+                cursor: pointer;
+            }
+            .pub-tabs li span:hover, .pub-tabs .active span {
+                color: #00a6e3;
+            }
+            .pub-tabs li a {
+                font: bold 14px "Microsoft Yahei";
+                color: #3c4457;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <tab-card tab-datas="tab_datas" on-tab-click="tabClick(tab)"></tab-card>
+        <script type="text/html" id="tab-card">
+            <div class="pub-tabs-wrap">
+                <ul class="pub-tabs">
+                    <li class="ib" ng-repeat="tab in tabDatas track by $index" ng-class="{'active': tab.isActive}" ng-click="onTabClick({tab: tab})">
+                        <span>{{tab.text}}</span>
+                    </li>
+                </ul>
+            </div>
+        </script>
+        <tab-card2 tab-datas="tab_datas2"></tab-card2>
+        <script type="text/html" id="tab-card2">
+            <div class="pub-tabs-wrap">
+                <ul class="pub-tabs">
+                    <li class="ib" ng-repeat="tab in tabDatas track by $index" ng-class="{'active': tab.isActive}" ng-click="onTabClick(tab)">
+                        <span>{{tab.text}}</span>
+                    </li>
+                </ul>
+            </div>
+        </script>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', function($scope){
+                $scope.tab_datas = [
+                    {text: 'tab1', isActive: 1},
+                    {text: 'tab2', isActive: 0},
+                    {text: 'tab3', isActive: 0}
+                ];
+                $scope.tab_datas2 = [
+                    {text: 'tab1', isActive: 1},
+                    {text: 'tab2', isActive: 0},
+                    {text: 'tab3', isActive: 0}
+                ];
+                $scope.tabClick = function(tab){
+                    angular.forEach($scope.tab_datas, function(v, k){
+                        v.isActive = 0;
+                    });
+                    console.log(tab);
+                    tab.isActive = 1;
+                };
+            }]);
+            app.directive('tabCard', function(){
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        tabDatas: '=',
+                        onTabClick: '&'
+                    },
+                    template: function(){
+                        return document.getElementById('tab-card').innerHTML;
+                    },
+                    controller: function($scope){
+                        console.log($scope.onTabClick);
+                    }
+                }
+            });
+            app.directive('tabCard2', function(){
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        tabDatas: '='
+                    },
+                    template: function(){
+                        return document.getElementById('tab-card2').innerHTML;
+                    },
+                    controller: function($scope){
+                        $scope.onTabClick = function(tab){
+                            angular.forEach($scope.tabDatas, function(v, k){
+                                v.isActive = 0;
+                            });
+                            console.log(tab);
+                            tab.isActive = 1;
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

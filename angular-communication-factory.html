@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-communication-factory</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <div ng-controller="MainCtrl">
+             <input type="text" ng-model="test" />
+             <button ng-click="change()">click me</button>
+        </div>
+        <div ng-controller="sideCtrl">
+            {{name}}
+            <button ng-click="add()">change my name </button>
+        </div>
+        <script>
+            var app = angular.module('app', []);
+            app.factory('instance', function(){
+                return {};
+            });
+            app.controller('MainCtrl', function($scope, instance) {
+                $scope.change = function(){
+                    instance.name = $scope.test;
+                    console.log(instance);
+               };
+            });
+            app.controller('sideCtrl', function($scope, instance) {
+                $scope.add = function(){
+                    $scope.name = instance.name;
+                };
+            });
+        </script>
+    </body>
+</html>

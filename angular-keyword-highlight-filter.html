@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-filter</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+        <style>
+            .highlighted {
+                color: red;
+            }
+        </style>
+    </head>
+    <body ng-app="app" ng-controller="MyController as vm">
+
+            <div style="margin-bottom:10px;">
+            Keywords            <br />
+                <input ng-model="vm.keywords" />
+            </div>
+            <div style="margin-bottom:10px;">
+            Text To Highlight            <br />
+                <input ng-model="vm.textToHighlight" />
+            </div>
+            <div style="margin-bottom:10px;">
+            Highlighted Text            <br />
+                <span ng-bind-html="vm.textToHighlight | highlightKeywords:vm.keywords"></span>
+            </div>
+        <script>
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', '$filter', function($scope, $filter){
+                var vm = {};
+                
+                //vm.keywords = "foo bar baz";
+                
+                //vm.textToHighlight = "Bar food is a bazillion times better with beer.";
+
+                return vm;
+            }]);
+
+            app.filter('highlightKeywords', function($sce) {
+                // returns all words in a sentence as an array, ignoring extra whitespace
+                var stringToArray = function(input) {
+                if(input)
+                {
+                    return input.match(/\S+/g);
+                    
+                }
+                else
+                {
+                    return [];
+                }
+                };
+
+                // returns regex that basically says 'match any word that starts with one of my keywords'
+                var getRegexPattern = function(keywordArray) {
+                
+
+                var pattern = "(^|\\b)(" + keywordArray.join("|") + ")";
+                
+                return new RegExp(pattern, "gi");
+                
+                };
+            
+                return function(textToHighlight, keywords) {
+                var filteredText = textToHighlight;
+                if(keywords !== "") {
+                    
+                    var keywordList = stringToArray(keywords);
+                    
+                    var pattern = getRegexPattern(keywordList);
+                    console.log(pattern);
+                    
+                    filteredText = textToHighlight.replace(pattern, '<span class="highlighted">$2</span>');
+
+                }
+                
+                return $sce.trustAsHtml(filteredText);
+                };
+            });
+        </script>
+    </body>
+</html>

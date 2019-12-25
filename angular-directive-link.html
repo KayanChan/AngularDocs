@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-link</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <stu1></stu1>
+        <hr>
+        <app-demo></app-demo>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.directive('stu1', function(){
+                return {
+                    restrict: 'E',
+                    template: '<p>1.<stu2></stu2></p>',
+                    controller: function(){
+                        // controller从最外部的stu1的link函数开始，依次执行
+                        console.log('stu1 controller running');
+                    },
+                    link: function(scope){
+                        console.log('stu1 running');
+                    }
+                };
+            });
+            app.directive('stu2', function(){
+                return {
+                    restrict: 'E',
+                    template: '<p>2.<stu3></stu3></p>',
+                    controller: function(){
+                        console.log('stu2 controller running');
+                    },
+                    link: function(scope){
+                        console.log('stu2 running');
+                    }
+                };
+            });
+            app.directive('stu4', function(){
+                return {
+                    restrict: 'E',
+                    template: '<p>4.</p>',
+                    controller: function($scope){
+                        $scope.name = 'Amber';
+                        console.log('stu4 controller running');
+                    },
+                    link: function(scope, el){
+                        // 先controller,后link
+                        el.append("<p>Hey!</p>")
+                        // link从最根部的stu4的link函数开始，依次执行
+                        console.log("stu4 link running");
+                    }
+                };
+            });
+            app.directive('stu3', function(){
+                return {
+                    restrict: 'E',
+                    template: '<p>3.<stu4></stu4></p>',
+                    controller: function(){
+                        console.log('stu3 controller running');
+                    },
+                    link: function(scope){
+                        console.log('stu3 link running');
+                    }
+                };
+            });
+
+            app.directive('appDemo', function(){
+                return {
+                    restrict: 'E',
+                    template: '<div>Click Me</div>',
+                    link: function(scope, element, attr, ctrl){
+                        element.bind('click', function(){
+                            console.log('绑定点击事件');
+                        });
+                        element.append('<p>link增加段落</p>');
+                        element.css({
+                            'display': 'inline-block',
+                            'background-color': '#999',
+                            'color': 'yellow'
+                        });
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-$interpolate</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <input type="email" ng-model="to">
+        <textarea name="name" rows="8" cols="80" ng-model="emailBody"></textarea>
+        <pre>{{previewText}}</pre>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', '$interpolate', '$timeout', function($scope, $interpolate, $timeout){
+                // 手动运行模板编译
+                $scope.$watch('emailBody', function(body){
+                    if(body){
+                        var template = $interpolate(body);
+                        $scope.previewText = template({to: $scope.to});
+                    }
+                });
+
+
+                // 模拟输入
+                $timeout(function(){
+                    $scope.to = '111@qq.com';
+                    $scope.emailBody = 'Dear {{to}}: This is a test mail.';
+                }, 1000);
+            }]);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-scope</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <!-- scope生命周期 - 1.创建 -->
+    <body ng-app="app" ng-controller="MyCtroller">
+        <input type="text" ng-model="name">
+        <div ng-bind="name"></div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            // ng-controller 指令为这个DOM元素创建了一个新的 $scope 对象，并将它嵌套在 $rootScope 中
+            // scope生命周期 - 2.链接($watch)
+            app.controller('MyCtroller', ['$scope', function($scope){
+                // scope生命周期 - 3.更新
+                $scope.name = 'Hello World';
+            }]);
+
+            // scope生命周期 - 4.销毁($destory)
+        </script>
+    </body>
+</html>

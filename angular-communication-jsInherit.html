@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-communication-jsInherit</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <h2>基本类型</h2>
+        <div ng-controller="ParentController">
+            <p>Location: {{location}}</p>
+            <button ng-click="move('ShangHai')">Move</button>
+            <div ng-controller="ChildController">
+                <p>Location: {{location}}</p>
+                <button ng-click="sell('Beijing')">Sell</button>
+            </div>
+        </div>
+        <h2>引用类型</h2>
+        <div ng-controller="PController">
+            <p>Location: {{vm.location}}</p>
+            <button ng-click="move('ShangHai')">Move</button>
+            <div ng-controller="CController">
+                <p>Location: {{vm.location}}</p>
+                <button ng-click="sell('Beijing')">Sell</button>
+            </div>
+        </div>
+        <script>
+            var app = angular.module('app', []);
+            app.controller('ParentController', ['$scope', function($scope){
+                $scope.location = "Guangzhou";
+                $scope.move = function(newLocation) {
+                    $scope.location = newLocation;
+                };
+            }]);
+            app.controller('ChildController', ['$scope', function($scope){
+                $scope.sell = function(newLocation) {
+                    $scope.location = newLocation;
+                };
+            }]);
+
+            app.controller('PController', ['$scope', function($scope){
+                $scope.vm = {};
+                $scope.vm.location = "Shenzhen";
+                $scope.move = function(newLocation) {
+                    $scope.vm.location = newLocation;
+                };
+            }]);
+            app.controller('CController', ['$scope', function($scope){
+                $scope.sell = function(newLocation) {
+                    $scope.vm.location = newLocation;
+                };
+            }]);
+        </script>
+    </body>
+</html>

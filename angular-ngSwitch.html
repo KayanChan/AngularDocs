@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-ngSwitch</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <select ng-model="people" ng-options="item.name for item in names">
+            <option value="">Choose people</option>
+        </select>
+        <div ng-switch on="people.name">
+            <div>And the winner is</div>
+            <p ng-switch-default>Somebody</p>
+            <h1 ng-switch-when="Amber">Amber</h1>
+            <h1 ng-switch-when="Lucas">Lucas</h1>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', function($scope){
+                $scope.names = [
+                    {name: 'Lucas'},
+                    {name: 'Amber'}
+                ];
+            }])
+        </script>
+    </body>
+</html>

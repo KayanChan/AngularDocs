@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-filter</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="MyController">
+        <div>{{ dataArr | filter:'e'}}</div>
+        <div>{{ ['Amber', 'Bob', 'Celli', 'Dom', 'Emma', 'Fiona'] | filter: '!e'}}</div>
+        <div>{{ dataObj | filter: {'age': 20} }}</div>
+        <div>{{ ['Lindy', 'Mani', 'Nancy', 'name'] | filter: isCapitalized }}</div>
+        <div>{{ "I am a big big world" | limitTo: 3 }}</div>
+        <div>{{ "I am a big big world" | limitTo: -5 }}</div>
+        <div>{{ ['Owen', 'Paul'] | limitTo: 1 }}</div>
+        <div>{{ dataObj | orderBy: 'age' }}</div>
+        <div>{{ dataObj | orderBy: 'age':true }}</div>
+        <div>{{ "I am a big big world" | uppercase }}</div>
+        <div>{{ "I Am A Big Big World" | lowercase }}</div>
+        <div>{{ 1.23456 | number: 2 }}</div>
+        <script>
+            var app = angular.module('app', []);
+            app.controller('MyController', ['$scope', '$filter', function($scope, $filter){
+                // 数组字符串
+                $scope.dataArr = ['Amber', 'Bob', 'Celli', 'Dom', 'Emma', 'Fiona'];
+                // 数组对象
+                $scope.dataObj = [
+                    {'name': 'Gigi', 'age': 21},
+                    {'name': 'Hugo', 'age': 19},
+                    {'name': 'Ivan', 'age': 20},
+                    {'name': 'Jackey', 'age': 20}
+                ];
+                // 函数
+                $scope.isCapitalized = function(str) {
+                    return str[0] == str[0].toUpperCase();
+                };
+            }]);
+        </script>
+    </body>
+</html>

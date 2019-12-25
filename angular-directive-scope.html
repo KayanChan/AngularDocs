@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-scope</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <div ng-controller="ParentController">
+            <h3>指令scope参数-false,true,{}对比测试</h3>
+                parent:
+                <div>
+                    <span>{{parentName}}</span>
+                    <input type="text" ng-model="parentName">
+                </div>
+                <br>
+                <child-a></child-a>
+                <br>
+                <child-b></child-b>
+                <br>
+                <child-c parent-name="parentName"></child-c>
+            <hr>
+            <h3>指令scope参数-{}的绑定策略</h3>
+                parent:
+                <p><span>{{name}}</span><input type="text" ng-model="name"></p>
+                <p><span>{{sexy}}</span><input type="text" ng-model="sexy"></p>
+                <p><span>{{age}}</span><input type="text" ng-model="age"></p>
+                <br>
+                <!-- @ 是单向绑定本地作用域，记得加上{{}} -->
+                <!-- &对应的attrName必须以on-开头 -->
+                <child-d my-name="name" my-sexy-attr="sexy" my-age={{age}} on-say="say('i am ' + name)"></child-d>
+        </div>
+        <script type="text/html" id="t1">
+            <div>
+                <span>{{parentName}}</span>
+                <input type="text" ng-model="parentName"/>
+            </div>
+        </script>
+        <script type="text/html" id="t2">
+            <div>
+                <span>{{myName}}</span>
+                <input type="text" ng-model="myName"/>
+            </div>
+            <div>
+                <span>{{mySexy}}</span>
+                <input type="text" ng-model="mySexy"/>
+            </div>
+            <div>
+                <span>{{myAge}}</span>
+                <input type="text" ng-model="myAge"/>
+            </div>
+        </script>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+
+            app.controller('ParentController', ['$scope', function($scope){
+                $scope.parentName = 'parent';
+
+                $scope.name = 'mark';
+                $scope.sexy = 'male';
+                $scope.age = '30';
+                $scope.say = function(sth){
+                    alert(sth);
+                };
+            }]);
+
+            // false:共享作用域
+            app.directive('childA', function(){
+                return {
+                    restrict: 'E',
+                    scope: false,
+                    template: function(elem, attr){
+                        return "false:共享作用域" + document.getElementById('t1').innerHTML;
+                    }
+                }
+            });
+
+            // true:继承父域，并建立独立作用域
+            app.directive('childB', function(){
+                return {
+                    restrict: 'E',
+                    scope: true,
+                    template: function(elem, attr){
+                        return "true:继承父域，并建立独立作用域" + document.getElementById('t1').innerHTML;
+                    },
+                    controller: function($scope){
+                        // 在指令未声明parentName的情况下，父域的parentName变更，指令中parentName也会刷新;一旦指令input变更，对应的独立scope也会自动声明该绑定对象，从此父域变更就不会刷新指令的parentName
+                        $scope.parentName = 'parent';
+
+                        // 已声明的情况下，$scope.$watch监听的是自己的parentName
+                        // 未声明的情况下，$scope.$watch监听的是父域的parentName
+                        $scope.$watch('parentName', function(newValue, oldValue){
+                            console.log("child watch " + newValue);
+                        });
+
+                        //$scope.$parent.$watch监听的是父域的parentName
+                        $scope.$parent.$watch('parentName', function(newValue, oldValue){
+                            console.log("parent watch " + newValue);
+                        });
+                    }
+                }
+            });
+
+            // {}:不继承父域，建立独立作用域
+            app.directive('childC', function(){
+                return {
+                    restrict: 'E',
+                    scope: {},
+                    template: function(elem, attr){
+                        return "{ }:不继承父域，建立独立作用域" + document.getElementById('t1').innerHTML;
+                    },
+                    controller: function($scope){
+                        console.log($scope);
+                    }
+                }
+            });
+
+
+            // scope-绑定策略
+            app.directive('childD', function(){
+                return {
+                    restrict: 'E',
+                    scope: {
+                        myName: '=', // 双向引用父域对象
+                        mySexy: '=mySexyAttr', // 双向引用父域对象
+                        myAge: '@', // 单向引用父域对象
+                        onSay: '&' // 调用父域函数
+                    },
+                    template: function(elem, attr){
+                        return "{}" + document.getElementById('t2').innerHTML;
+                    },
+                    controller: function($scope){
+                        console.log($scope.myName);
+                        console.log($scope.mySexy);
+                        console.log($scope.myAge);
+                        $scope.onSay();
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

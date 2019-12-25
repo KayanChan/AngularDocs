@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-parent-child-controller</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="ParentCtroller">
+        <div>{{user.name}} has a son.</div>
+        <div ng-controller="ChildCtroller">
+            <div>{{user.name}}'s son is {{user.age}} years old.</div>
+        </div>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('ParentCtroller', ['$scope', function($scope){
+                $scope.user = {
+                    name: 'Papa'
+                };
+            }]);
+            app.controller('ChildCtroller', ['$scope', function($scope){
+                $scope.user.age = 15;
+            }])
+        </script>
+    </body>
+</html>

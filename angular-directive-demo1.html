@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>angular-directive-隔离</title>
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <div>
+            <div ng-controller="DemoController">
+                <h3>Demo</h3>
+                <student-card stu="guy" on-save="saveEditing()"></student-card>
+            </div>
+        </div>
+        <script type="text/html" id="t1">
+            <div class="panel">
+                <h3>student card</h3>
+                <p>
+                    <span>name:</span>
+                    <input type="text" ng-model="stu.name" ng-change="nameChange()">
+                </p>
+                <p>
+                    <span>sexy:</span>
+                    <select ng-model="stu.sexy" ng-change="sexyChange()">
+                        <option value="male">male</option>
+                        <option value="female">female</option>
+                    </select>
+                </p>
+                <button type="button" name="button" ng-click="onSave()">Save</button>
+            </div>
+        </script>
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+            app.controller('DemoController', ['$scope', function($scope){
+                $scope.guy = {
+                    name: 'Lucas',
+                    sexy: 'male'
+                };
+                $scope.saveEditing = function(){
+                    // $http.post('...')
+                    console.log($scope.guy.name + ' is saving');
+                    console.log($scope.guy);
+                };
+                $scope.nameChange = function(){
+                    console.log('name changing');
+                };
+                $scope.sexyChange = function(){
+                    console.log('sexy changing');
+                }
+            }]);
+            app.directive('studentCard', function(){
+                return {
+                    restrict: 'E',
+                    scope: {
+                        stu: '=',
+                        onSave: '&'
+                    }, // 完全隔离
+                    template: function(){
+                        return document.getElementById('t1').innerHTML
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
